@@ -53,7 +53,7 @@ export default class Video extends Component {
   }
 
   seek = (time, tolerance = 100) => {
-    if (isNaN(time)) {throw new Error('Specified time is not a number');}
+    if (isNaN(time)) { throw new Error('Specified time is not a number'); }
 
     if (Platform.OS === 'ios') {
       this.setNativeProps({
@@ -413,6 +413,10 @@ Video.propTypes = {
   }),
   minLoadRetryCount: PropTypes.number,
   maxBitRate: PropTypes.number,
+  maxResolution: PropTypes.shape({
+    width: PropTypes.number,
+    height: PropTypes.number,
+  }),
   resizeMode: PropTypes.string,
   poster: PropTypes.string,
   posterResizeMode: Image.propTypes.resizeMode,

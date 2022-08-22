@@ -59,6 +59,7 @@ static int const RCTVideoUnset = -1;
   float _volume;
   float _rate;
   float _maxBitRate;
+  NSDictionary * _maxResolution;
 
   BOOL _automaticallyWaitsToMinimizeStalling;
   BOOL _muted;
@@ -370,6 +371,7 @@ static int const RCTVideoUnset = -1;
       [self addPlayerItemObservers];
       [self setFilter:self->_filterName];
       [self setMaxBitRate:self->_maxBitRate];
+      [self setMaxResolution:self->_maxResolution];
       
       [_player pause];
         
@@ -1028,6 +1030,22 @@ static int const RCTVideoUnset = -1;
   _playerItem.preferredPeakBitRate = maxBitRate;
 }
 
+- (void)setMaxResolution:(NSDictionary *) maxResolution {
+  _maxResolution = maxResolution;
+  int width = 0;
+  if ([maxResolution[@"width"] isKindOfClass:[NSNumber class]]) {
+    width = [maxResolution[@"width"] intValue];
+  }
+  int height = 0;
+  if ([maxResolution[@"height"] isKindOfClass:[NSNumber class]]) {
+    height = [maxResolution[@"height"] intValue];
+  }
+
+  if (@available(iOS 11.0, *)) {
+    _playerItem.preferredMaximumResolution = CGSizeMake(width, height);
+  }
+}
+
 - (void)setPreferredForwardBufferDuration:(float) preferredForwardBufferDuration
 {
   _preferredForwardBufferDuration = preferredForwardBufferDuration;
@@ -1060,6 +1078,7 @@ static int const RCTVideoUnset = -1;
   }
   
   [self setMaxBitRate:_maxBitRate];
+  [self setMaxResolution:_maxResolution];
   [self setSelectedAudioTrack:_selectedAudioTrack];
   [self setSelectedTextTrack:_selectedTextTrack];
   [self setResizeMode:_resizeMode];
