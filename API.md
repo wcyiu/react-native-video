@@ -284,6 +284,7 @@ var styles = StyleSheet.create({
 |[hideShutterView](#hideshutterview)|Android|
 |[ignoreSilentSwitch](#ignoresilentswitch)|iOS|
 |[maxBitRate](#maxbitrate)|Android, iOS|
+|[maxResolution](#maxresolution)|iOS|
 |[minLoadRetryCount](#minLoadRetryCount)|Android|
 |[mixWithOthers](#mixWithOthers)|iOS|
 |[muted](#muted)|All|
@@ -547,6 +548,23 @@ maxBitRate={2000000} // 2 megabits
 ```
 
 Platforms: Android, iOS
+#### maxResolution
+Sets the desired limit to resolution, to limit network bandwidth consumption when multiple video streams are available for a playlist. Only supported on iOS 11 and higher.
+
+If not set, will not limit the maxResolution.
+
+Property | Type | Description
+--- | --- | ---
+width | number | If 0, allow any width. Otherwise only allow resolutions <= width
+height | number | If 0, allow any height. Otherwise only allow resolutions <= height
+Both width & height must be set to a non-zero value for the resolution limit to be applied.
+
+Example:
+```
+maxResolution={ width: 360, height: 180 }
+```
+
+Platforms: iOS
 
 #### minLoadRetryCount
 Sets the minimum number of times to retry loading data before failing and reporting an error to the application. Useful to recover from transient internet failures.

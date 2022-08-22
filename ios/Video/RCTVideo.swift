@@ -35,6 +35,7 @@ class RCTVideo: UIView, RCTVideoPlayerViewControllerDelegate, RCTPlayerObserverH
     private var _volume:Float = 1.0
     private var _rate:Float = 1.0
     private var _maxBitRate:Float?
+    private var _maxResolution: NSDictionary?
     
     private var _automaticallyWaitsToMinimizeStalling:Bool = true
     private var _muted:Bool = false
@@ -273,6 +274,11 @@ class RCTVideo: UIView, RCTVideoPlayerViewControllerDelegate, RCTPlayerObserverH
                 if let maxBitRate = self._maxBitRate {
                     self._playerItem?.preferredPeakBitRate = Double(maxBitRate)
                 }
+                if let maxResolution = self._maxResolution {
+                    int width = maxResolution["width", default: 0];
+                    int height = maxResolution["height", default: 0];
+                    self._playerItem?.preferredMaximumResolution = CGSizeMake(width, height);
+                }
                 
                 self._player = AVPlayer(playerItem: self._playerItem)
                 self._playerObserver.player = self._player
@@ -475,6 +481,16 @@ class RCTVideo: UIView, RCTVideoPlayerViewControllerDelegate, RCTPlayerObserverH
     }
     
     @objc
+    func setMaxResolution(_ maxResolution:NSDictionary) {
+        _maxResolution = maxResolution
+        if (@available(iOS 11.0, *)) {
+          int width = maxResolution["width", default: 0];
+          int height = maxResolution["height", default: 0];
+          _playerItem.preferredMaximumResolution = CGSizeMake(width, height);
+        }
+    }
+    
+    @objc
     func setPreferredForwardBufferDuration(_ preferredForwardBufferDuration:Float) {
         _preferredForwardBufferDuration = preferredForwardBufferDuration
         if #available(iOS 10.0, *) {
@@ -514,6 +530,9 @@ class RCTVideo: UIView, RCTVideoPlayerViewControllerDelegate, RCTPlayerObserverH
         
         if let _maxBitRate = _maxBitRate {
             setMaxBitRate(_maxBitRate)
+        }
+        if let _maxResolution = _maxResolution {
+            setMaxResolution(_maxResolution)
         }
         
         setSelectedAudioTrack(_selectedAudioTrackCriteria)
